@@ -6,4 +6,5 @@ C:\Program Files\SFML\SFML-3.0.0\include\SFML\System\Exception.hpp(41,47): warni
       C:\Program Files\SFML\SFML-3.0.0\include\SFML\System\Exception.hpp(41,23):
       see declaration of 'sf::Exception'
   
-  Timber.vcxproj -> D:\Downloads\Timber\Debug\Timber.exe
+D:\Downloads\snake\Timber\main.cpp(40,22): warning C4834: discarding return value of function with [[nodiscard]] attribute
+  Timber.vcxproj -> D:\Downloads\snake\Debug\Timber.exe
