@@ -1,10 +1,10 @@
-﻿  main.cpp
+﻿  MainMenuScene.cpp
 C:\Program Files\SFML\SFML-3.0.0\include\SFML\System\Exception.hpp(41,47): warning C4275: non dll-interface class 'std::runtime_error' used as base for dll-interface class 'sf::Exception'
-  (compiling source file 'main.cpp')
+  (compiling source file 'MainMenuScene.cpp')
       C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\stdexcept(100,19):
       see declaration of 'std::runtime_error'
       C:\Program Files\SFML\SFML-3.0.0\include\SFML\System\Exception.hpp(41,23):
       see declaration of 'sf::Exception'
   
-D:\Downloads\snake\Timber\main.cpp(40,22): warning C4834: discarding return value of function with [[nodiscard]] attribute
+D:\Downloads\snake\Timber\MainMenuScene.cpp(60,69): warning C4244: 'argument': conversion from 'float' to 'uint8_t', possible loss of data
   Timber.vcxproj -> D:\Downloads\snake\Debug\Timber.exe

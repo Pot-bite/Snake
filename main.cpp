@@ -1,57 +1,35 @@
 #include <SFML/Graphics.hpp>
+#include "SceneManager.h"
+#include "MainMenuScene.h"
 #include <iostream>
-
 
 
 int main()
 {
-    // Create main window
-    sf::RenderWindow window(sf::VideoMode({ 1920, 1080 }), "SFML Game");
 
-    // text character size
-    const short characterSize = 50;
+    // Create window
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Snake Game");
+    window.setFramerateLimit(60);
 
-    sf::Clock blinkClock;
-    float blinkInterval = 0.45f; // Blink time
-    bool isTextVisible = true;
+    
 
-    // Load texture
-    sf::Texture backGroundTexture;
-    if (!backGroundTexture.loadFromFile("D:/Downloads/snake/Timber/assets/graphics/start-image.png")) {
-        std::cerr << "Failed to load texture!" << std::endl;
-        return EXIT_FAILURE;
+    // Set initial scene
+    SceneManager::getInstance().SetWindow(&window);
+
+
+    try {
+        SceneManager::getInstance().SetActiveScene(std::make_unique<MainMenuScene>());
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Scene creation failed: " << e.what() << std::endl;
     }
 
-    sf::Sprite backGroundSprite(backGroundTexture);
 
-    // Get sizes as Vector2u (unsigned)
-    sf::Vector2u windowSize = window.getSize();
-    sf::Vector2u textureSize = backGroundTexture.getSize();
-
-    // Calculate scale factors
-    sf::Vector2f scaleFactors(
-        static_cast<float>(windowSize.x) / textureSize.x,
-        static_cast<float>(windowSize.y) / textureSize.y
-    );
-
-    backGroundSprite.setScale(scaleFactors);
-
-    sf::Font font;
-    font.openFromFile("D:/Downloads/snake/Timber/assets/fonts/KOMIKAX_.ttf");
-    if (!font.openFromFile("D:/Downloads/snake/Timber/assets/fonts/KOMIKAX_.ttf"))
-        throw std::runtime_error("Error with font");
-
-    sf::Text text(font);
-    text.setString("Press space button");
-    text.setCharacterSize(characterSize);
-    text.setFillColor(sf::Color::White);
-    text.setPosition(sf::Vector2f(700, 950));
-
-   
-   
+    // Main game loop
+    sf::Clock clock;
     while (window.isOpen())
     {
-
+        float deltaTime = clock.restart().asSeconds();
 
         while (const std::optional event = window.pollEvent())
         {
@@ -64,33 +42,19 @@ int main()
                 break;
             }
 
+            
+
+            SceneManager::getInstance().HandleEvent(*event);           
         }
 
-
-        // Blink logic
-        if (blinkClock.getElapsedTime().asSeconds() >= blinkInterval)
-        {
-            isTextVisible = !isTextVisible;
-            blinkClock.restart();
-
-            if (isTextVisible)
-                text.setFillColor(sf::Color::White);
-            else
-                text.setFillColor(sf::Color(255, 255, 255, 128));
-        }
-
-
-
-           
-
+        // Update current scene
+        SceneManager::getInstance().Update(deltaTime);
+            
+        // Render
         window.clear();
-        window.draw(backGroundSprite);
-        window.draw(text);
+        SceneManager::getInstance().Render(window);
         window.display();
-
-
     }
 
-
-    return EXIT_SUCCESS;
+    return 0;
 }
