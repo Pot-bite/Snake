@@ -27,6 +27,7 @@ int main()
 
     // Main game loop
     sf::Clock clock;
+
     while (window.isOpen())
     {
         float deltaTime = clock.restart().asSeconds();

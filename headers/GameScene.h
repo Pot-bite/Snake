@@ -1,10 +1,13 @@
 #pragma once
 #include "Scene.h"
 #include <SFML/Graphics.hpp>
+#include "Snake.h"
 
 class GameScene : public Scene {
 public:
     GameScene();  // Constructor
+
+    Object m_object;
 
     // Move operations
     GameScene(GameScene&&) = default;
