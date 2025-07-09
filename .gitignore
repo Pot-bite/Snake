@@ -14,6 +14,9 @@ build
 *.lo
 *.o
 *.obj
+*.vcxproj
+*.filters
+*.user
 
 # Precompiled Headers
 *.gch
