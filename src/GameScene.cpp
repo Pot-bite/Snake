@@ -4,12 +4,15 @@
 #include "MainMenuScene.h"
 #include <iostream>
 #include "Snake.h"
+#include "Button.h"
 
 
 
 GameScene::GameScene()
     : m_backgroundSprite(m_backgroundTexture),
-    m_object(sf::Vector2f({0,0}))
+    m_object(sf::Vector2f({0,0})),
+   isPaused(false),
+    button1("Continue", sf::Vector2f(500, 300), sf::Color::White)
 {
     if (m_backgroundTexture.loadFromFile("assets/graphics/floor.png")) {
         m_backgroundSprite.setTexture(m_backgroundTexture, true);
@@ -18,9 +21,10 @@ GameScene::GameScene()
     else {
         std::cerr << "Failed to load floor.png. Background sprite disabled." << std::endl;
 
-    }
-
+    }    
     
+    
+
 }
 
 
@@ -34,17 +38,107 @@ void GameScene::Start(sf::RenderWindow& window)
 
     m_backgroundSprite.setScale({ scaleX, scaleY });
     
+    sf::Vector2f snakePos = static_cast<sf::Vector2f>(windowSize);
+    m_object.snakeSprite.setPosition({snakePos.x / 2, snakePos.y / 2});
+
+    m_window = &window;
+
+    pauseOverlay.setFillColor(sf::Color(0, 0, 0, 128));
+    pauseOverlay.setPosition({ 0,0 });
+    pauseOverlay.setSize(sf::Vector2f(window.getSize()));
+
+
+    
+    sf::Vector2f button1Pos = static_cast<sf::Vector2f>(windowSize) / 2.0f;
+    button1Pos.y -= 300.0f;  // Move up by 100 pixels from center
+    button1.Start(window, button1Pos);
+    
 }
 
-void GameScene::Update(float deltaTime)
+void GameScene::Update(float deltaTime, sf::RenderWindow& m_window)
 {
-    m_object.snakeSprite.move(m_object.velocity * deltaTime);
+    if (isPaused)
+        return;
+
+    
+    
+
+        sf::Vector2f prevVelocity = m_object.velocity;
+
+        // Handle direction changes (only modify velocity when keys are pressed)
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) {
+            m_object.velocity.x = 100.0f;  // Right
+            m_object.velocity.y = 0.0f;    // Cancel vertical movement
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) {
+            m_object.velocity.x = -100.0f; // Left
+            m_object.velocity.y = 0.0f;     // Cancel vertical movement
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) {
+            m_object.velocity.y = -100.0f;  // Up
+            m_object.velocity.x = 0.0f;     // Cancel horizontal movement
+        }
+        else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) {
+            m_object.velocity.y = 100.0f;   // Down
+            m_object.velocity.x = 0.0f;     // Cancel horizontal movement
+        }
+
+        // Only update rotation if velocity changed
+        if (m_object.velocity != prevVelocity && m_object.velocity != sf::Vector2f(0, 0))
+        {
+            // Calculate angle in radians from velocity vector
+            float angle = std::atan2(m_object.velocity.y, m_object.velocity.x);
+            // Convert to degrees
+            float degrees = angle * (180.0f / 3.14159265f);
+
+            m_object.snakeSprite.setRotation(sf::degrees(degrees));
+        }
+
+
+        // Apply continuous movement 
+        m_object.snakeSprite.move(m_object.velocity * deltaTime);
+
+
+
+        sf::Vector2u windowSize = m_window.getSize();
+        sf::Vector2f position = m_object.snakeSprite.getPosition();
+
+        // Get sprite dimensions (if needed for precise wrapping)
+        sf::FloatRect bounds = m_object.snakeSprite.getGlobalBounds();
+
+        // Screen wrapping logic
+        if (position.x > windowSize.x + (bounds.size.x / 5)) {
+            position.x = 0 - bounds.size.x / 5;  // Wrap to left with half-sprite offset
+        }
+        else if (position.x < -bounds.size.x / 5) {
+            position.x = windowSize.x + bounds.size.x / 5;  // Wrap to right
+        }
+
+        if (position.y > windowSize.y + (bounds.size.y) / 5) {
+            position.y = 0 - bounds.size.y / 5;  // Wrap to top
+        }
+        else if (position.y < -bounds.size.y / 5) {
+            position.y = windowSize.y + bounds.size.y / 5;  // Wrap to bottom
+        }
+
+        // Apply new position if wrapping occurred
+        m_object.snakeSprite.setPosition(position);
+
+        
 }
 
 void GameScene::Render(sf::RenderWindow& window)
 {
     window.draw(m_backgroundSprite);
     window.draw(m_object.snakeSprite);
+
+    if (isPaused) {
+        window.draw(pauseOverlay);
+        window.draw(button1.button);
+        button1.ChangeColor(window);
+    }
+        
+
 }
 
 void GameScene::HandleEvent(const sf::Event& event)
@@ -54,4 +148,26 @@ void GameScene::HandleEvent(const sf::Event& event)
      {
         SceneManager::getInstance().SetActiveScene(std::make_unique<MainMenuScene>());
      }
+     else if(event.is<sf::Event::KeyPressed>()&&
+         event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::P)
+     {
+         isPaused = !isPaused;
+     }
+
+     if (isPaused) {
+         if (auto* mouseEvent = event.getIf<sf::Event::MouseButtonPressed>()) {
+             if (mouseEvent->button == sf::Mouse::Button::Left) {
+                 // Convert mouse position to world coordinates
+                 sf::Vector2f mousePos = m_window->mapPixelToCoords(
+                     { mouseEvent->position.x, mouseEvent->position.y });
+
+                 // Check if click was on the button
+                 if (button1.button.getGlobalBounds().contains(mousePos)) {
+                     isPaused = false;  // Unpause the game
+                 }
+             }
+         }
+     }
+
+
 }

@@ -12,6 +12,7 @@ int main()
     window.setFramerateLimit(60);
 
     
+    
 
     // Set initial scene
     SceneManager::getInstance().SetWindow(&window);
@@ -45,11 +46,11 @@ int main()
 
             
 
-            SceneManager::getInstance().HandleEvent(*event);           
+            SceneManager::getInstance().HandleEvent(*event); 
         }
 
         // Update current scene
-        SceneManager::getInstance().Update(deltaTime);
+        SceneManager::getInstance().Update(deltaTime, window);
             
         // Render
         window.clear();

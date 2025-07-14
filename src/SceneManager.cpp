@@ -7,9 +7,9 @@ void SceneManager::SetActiveScene(std::unique_ptr<Scene> newScene) {
     }
 }
 
-void SceneManager::Update(float deltaTime) {
+void SceneManager::Update(float deltaTime, sf::RenderWindow& m_window){
     if (m_currentScene) {
-        m_currentScene->Update(deltaTime);
+        m_currentScene->Update(deltaTime, m_window);
     }
 }
 

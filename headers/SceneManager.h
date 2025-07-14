@@ -12,7 +12,7 @@ public:
 
     void SetWindow(sf::RenderWindow* window) { m_window = window; }
     void SetActiveScene(std::unique_ptr<Scene> newScene);
-    void Update(float deltaTime);
+    void Update(float deltaTime, sf::RenderWindow& m_window);
     void Render(sf::RenderWindow& window);
     void HandleEvent(const sf::Event& event);
     sf::RenderWindow* GetWindow() const { return m_window; }

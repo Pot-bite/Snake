@@ -50,7 +50,7 @@ void MainMenuScene::Start(sf::RenderWindow& window)
 }
 
 
-void MainMenuScene::Update(float deltaTime)
+void MainMenuScene::Update(float deltaTime, sf::RenderWindow& m_window)
 {
     float pi = 3.14159f; // to convert into radians
 
@@ -62,9 +62,6 @@ void MainMenuScene::Update(float deltaTime)
 
 void MainMenuScene::Render(sf::RenderWindow& window)
 {
-    
-    
-
     window.draw(m_backgroundSprite);  
     window.draw(m_text);
 }

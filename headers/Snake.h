@@ -8,6 +8,7 @@ public:
     sf::Vector2f velocity;
     float mass;
     float elasticity;
+    sf::FloatRect bounds;
 
     // Constructor with default parameters
     Object(sf::Vector2f position, float mass = 1.0f, float elasticity = 0.5f);

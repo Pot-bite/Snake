@@ -25,7 +25,7 @@ public:
     MainMenuScene& operator=(const MainMenuScene&) = delete;
 
     void Start(sf::RenderWindow& window) override;
-    void Update(float deltaTime) override;
+    void Update(float deltaTime, sf::RenderWindow& m_window) override;
     void Render(sf::RenderWindow& window) override;
     void HandleEvent(const sf::Event& event) override;
 

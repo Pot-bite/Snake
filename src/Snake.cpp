@@ -3,18 +3,22 @@
 
 
 Object::Object(sf::Vector2f position, float mass, float elasticity)
-    : mass(mass), 
-    elasticity(elasticity), 
-    velocity({ 0, 0 }) ,
+    : mass(mass),
+    elasticity(elasticity),
+    velocity({ 0, 0 }),
     snakeSprite(snakeTexture)
 {
     if (!snakeTexture.loadFromFile("assets/graphics/snakehead.png")) {
         std::cerr << "Error with images";
     }
     snakeSprite.setTexture(snakeTexture, true);
-    snakeSprite.setPosition(position);
+
+    bounds = snakeSprite.getGlobalBounds();
+    snakeSprite.setOrigin({ bounds.size.x / 5, bounds.size.x / 5 });  // Rotate around center
+
 }
 
 void Object::update(float deltaTime) {
-    snakeSprite.move(velocity * deltaTime); 
+    // Apply movement
+    snakeSprite.move(velocity * deltaTime);
 }
