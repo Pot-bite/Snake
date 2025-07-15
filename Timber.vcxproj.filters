@@ -32,6 +32,12 @@
     <ClInclude Include="headers\Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\MenuButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\ExitButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\GameScene.cpp">
@@ -53,6 +59,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Snake.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MenuButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ExitButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

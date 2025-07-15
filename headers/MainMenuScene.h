@@ -29,5 +29,5 @@ public:
     void Render(sf::RenderWindow& window) override;
     void HandleEvent(const sf::Event& event) override;
 
-    
+    bool IsClosed() const override;
 };

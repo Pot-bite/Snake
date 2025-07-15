@@ -1,18 +1,20 @@
 #pragma once
+#include "Button.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-class Button {
+class MenuButton : public Button
+{
 public:
 
-    Button(); // Default constructor (declaration)
-    Button(std::string t, sf::Vector2f size, sf::Color bgcolor); // Parameterized constructor
-    
-
-   virtual void Start(sf::RenderWindow& window, sf::Vector2f pos);
+    MenuButton(); // Default constructor (declaration)
+    MenuButton(std::string t, sf::Vector2f size, sf::Color bgcolor); // Parameterized constructor
 
 
-   virtual void ChangeColor(sf::RenderWindow& window);
+    void Start(sf::RenderWindow& window, sf::Vector2f pos) override;
+
+
+    void ChangeColor(sf::RenderWindow& window) override;
 
 
     bool MouseOver(sf::RenderWindow& window) {

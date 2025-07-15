@@ -20,17 +20,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Button.h" />
+    <ClInclude Include="headers\ExitButton.h" />
     <ClInclude Include="headers\GameScene.h" />
     <ClInclude Include="headers\MainMenuScene.h" />
+    <ClInclude Include="headers\MenuButton.h" />
     <ClInclude Include="headers\Scene.h" />
     <ClInclude Include="headers\SceneManager.h" />
     <ClInclude Include="Snake.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Button.cpp" />
+    <ClCompile Include="src\ExitButton.cpp" />
     <ClCompile Include="src\GameScene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\MainMenuScene.cpp" />
+    <ClCompile Include="src\MenuButton.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\SceneManager.cpp" />
     <ClCompile Include="src\Snake.cpp" />

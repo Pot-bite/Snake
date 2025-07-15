@@ -2,29 +2,26 @@
 #include "SceneManager.h"
 #include "MainMenuScene.h"
 #include <iostream>
-
+#include "GameScene.h"
 
 int main()
 {
-
     // Create window
     sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Snake Game");
     window.setFramerateLimit(60);
 
-    
-    
+    SceneManager& sceneManager = SceneManager::getInstance();
 
-    // Set initial scene
+    // Set window reference in SceneManager
     SceneManager::getInstance().SetWindow(&window);
-
 
     try {
         SceneManager::getInstance().SetActiveScene(std::make_unique<MainMenuScene>());
     }
     catch (const std::exception& e) {
         std::cerr << "Scene creation failed: " << e.what() << std::endl;
+        return -1;
     }
-
 
     // Main game loop
     sf::Clock clock;
@@ -33,7 +30,8 @@ int main()
     {
         float deltaTime = clock.restart().asSeconds();
 
-        while (const std::optional event = window.pollEvent())
+        // Event handling
+        while (const auto event = window.pollEvent())
         {
             // Window closed or escape key pressed: exit
             if (event->is<sf::Event::Closed>() ||
@@ -44,14 +42,18 @@ int main()
                 break;
             }
 
-            
+            SceneManager::getInstance().HandleEvent(*event);
+        }
 
-            SceneManager::getInstance().HandleEvent(*event); 
+        if (sceneManager.GetActiveScene() && sceneManager.GetActiveScene()->IsClosed())
+        {
+            window.close();
+            break;
         }
 
         // Update current scene
         SceneManager::getInstance().Update(deltaTime, window);
-            
+
         // Render
         window.clear();
         SceneManager::getInstance().Render(window);

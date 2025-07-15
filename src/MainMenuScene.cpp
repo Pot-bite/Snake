@@ -76,3 +76,6 @@ void MainMenuScene::HandleEvent(const sf::Event& event)
     }
 }
 
+bool MainMenuScene::IsClosed() const {
+    return false;  
+}

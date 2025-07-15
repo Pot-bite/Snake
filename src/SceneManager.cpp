@@ -24,3 +24,7 @@ void SceneManager::HandleEvent(const sf::Event& event) {
         m_currentScene->HandleEvent(event);
     }
 }
+
+Scene* SceneManager::GetActiveScene() const {
+    return m_currentScene.get();
+}

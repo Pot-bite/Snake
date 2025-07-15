@@ -5,6 +5,8 @@
 #include <iostream>
 #include "Snake.h"
 #include "Button.h"
+#include "MenuButton.h"
+#include "Scene.h"
 
 
 
@@ -12,7 +14,10 @@ GameScene::GameScene()
     : m_backgroundSprite(m_backgroundTexture),
     m_object(sf::Vector2f({0,0})),
    isPaused(false),
-    button1("Continue", sf::Vector2f(500, 300), sf::Color::White)
+    conButton("Continue", sf::Vector2f(500, 300), sf::Color::White),
+    menuButton("Menu", sf::Vector2f(150, 100), sf::Color::White),
+    exitButton("Exit", sf::Vector2f(500, 300), sf::Color::White),
+    isClosed(false)
 {
     if (m_backgroundTexture.loadFromFile("assets/graphics/floor.png")) {
         m_backgroundSprite.setTexture(m_backgroundTexture, true);
@@ -49,9 +54,18 @@ void GameScene::Start(sf::RenderWindow& window)
 
 
     
-    sf::Vector2f button1Pos = static_cast<sf::Vector2f>(windowSize) / 2.0f;
-    button1Pos.y -= 300.0f;  // Move up by 100 pixels from center
-    button1.Start(window, button1Pos);
+    sf::Vector2f conButtonPos = static_cast<sf::Vector2f>(windowSize) / 2.0f;
+    conButtonPos.y -= 300.0f;  // Move up by 100 pixels from center
+    conButton.Start(window, conButtonPos);
+
+    sf::Vector2f menuButtonPos = static_cast<sf::Vector2f>(windowSize);
+    menuButtonPos.x -= menuButton.button.getSize().x;  // Subtract button width from window width
+    menuButtonPos.y = 100.0f;  // Keep your desired top margin
+    menuButton.Start(window, menuButtonPos);
+
+    sf::Vector2f exitButtonPos = static_cast<sf::Vector2f>(windowSize) / 2.0f;
+    exitButtonPos.y += conButtonPos.y / 4.0f;
+    exitButton.Start(window, exitButtonPos);
     
 }
 
@@ -132,10 +146,17 @@ void GameScene::Render(sf::RenderWindow& window)
     window.draw(m_backgroundSprite);
     window.draw(m_object.snakeSprite);
 
+    window.draw(menuButton.button);
+    menuButton.ChangeColor(window);
+
     if (isPaused) {
         window.draw(pauseOverlay);
-        window.draw(button1.button);
-        button1.ChangeColor(window);
+
+        window.draw(conButton.button);
+        conButton.ChangeColor(window);
+
+        window.draw(exitButton.button);
+        exitButton.ChangeColor(window);
     }
         
 
@@ -148,10 +169,19 @@ void GameScene::HandleEvent(const sf::Event& event)
      {
         SceneManager::getInstance().SetActiveScene(std::make_unique<MainMenuScene>());
      }
-     else if(event.is<sf::Event::KeyPressed>()&&
-         event.getIf<sf::Event::KeyPressed>()->code == sf::Keyboard::Key::P)
+     else if(auto* mouseEvent = event.getIf<sf::Event::MouseButtonPressed>())
      {
-         isPaused = !isPaused;
+         if (mouseEvent->button == sf::Mouse::Button::Left) {
+             // Convert mouse position to world coordinates
+             sf::Vector2f mousePos = m_window->mapPixelToCoords(
+                 { mouseEvent->position.x, mouseEvent->position.y });
+
+             // Check if click was on the button
+             if (menuButton.button.getGlobalBounds().contains(mousePos)) {
+                 isPaused = true;  // pause the game
+             }
+         }
+         
      }
 
      if (isPaused) {
@@ -162,12 +192,21 @@ void GameScene::HandleEvent(const sf::Event& event)
                      { mouseEvent->position.x, mouseEvent->position.y });
 
                  // Check if click was on the button
-                 if (button1.button.getGlobalBounds().contains(mousePos)) {
+                 if (conButton.button.getGlobalBounds().contains(mousePos)) {
                      isPaused = false;  // Unpause the game
                  }
+
+                 if (exitButton.button.getGlobalBounds().contains(mousePos)) {
+                     isClosed = true;
+                 }
+
              }
          }
      }
 
+     
+}
 
+bool GameScene::IsClosed() const {
+    return isClosed;
 }

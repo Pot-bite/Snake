@@ -10,4 +10,6 @@ public:
     virtual void Update(float deltaTime, sf::RenderWindow& m_window) = 0;
     virtual void Render(sf::RenderWindow& window) = 0;
     virtual void HandleEvent(const sf::Event& event) = 0;
+
+    virtual bool IsClosed() const = 0;
 };
